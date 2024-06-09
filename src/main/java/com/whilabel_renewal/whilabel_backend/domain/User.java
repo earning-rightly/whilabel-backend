@@ -32,27 +32,27 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sns_login_type")
-    private SnsLoginType snsLoginType;
+    private SnsLoginType snsLoginType = SnsLoginType.GOOGLE;
 
     private String nickname;
 
     @Column(name = "is_push_allowed")
-    private boolean isPushAllowed;
+    private boolean isPushAllowed = false;
 
     @Column(name = "is_marketing_push_allowed")
-    private boolean isMarketingPushAllowed;
+    private boolean isMarketingPushAllowed = false;
 
     @Column(name = "push_token")
     private String pushToken;
 
     @Column(name = "sns_token")
-    private String snsToken;
+    private String snsToken = "";
 
     @Column(name = "auth_token")
-    private String authToken;
+    private String authToken = "";
 
     @Column(name = "is_resigned")
-    private boolean isResigned;
+    private boolean isResigned = false;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;

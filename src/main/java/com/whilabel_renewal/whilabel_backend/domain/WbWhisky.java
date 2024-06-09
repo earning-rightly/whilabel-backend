@@ -17,7 +17,7 @@ public class WbWhisky {
     private Long id;
 
     private String barcode;
-    private String name;
+    private String name = "unknown";
     private Double strength;
 
     @Column(name = "image_url")

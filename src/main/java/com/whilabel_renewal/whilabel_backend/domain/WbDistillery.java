@@ -15,7 +15,7 @@ public class WbDistillery {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String name;
+    private String name = "unknown";
     private String link;
     private String country;
     private String address;
@@ -23,10 +23,10 @@ public class WbDistillery {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "batch_date_time")
-    private Date backDateTime;
+    private Date backDateTime = new Date();
 
     @Column(name = "batch_id")
-    private Long batchId;
+    private Long batchId = 0L;
 
     @Column(name = "whisky_count")
     private int whiskyCount;

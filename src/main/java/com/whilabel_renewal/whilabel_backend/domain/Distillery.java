@@ -18,8 +18,8 @@ public class Distillery {
     @JoinColumn(name = "wb_distillery_id")
     private WbDistillery wbDistillery;
 
-    private String name;
-    private String normalizedName;
+    private String name = "unknown";
+    private String normalizedName = "unknown";
 
     @Column(name = "official_url")
     private String officialUrl;
@@ -39,9 +39,9 @@ public class Distillery {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "create_date_time")
-    private Date createDateTime;
+    private Date createDateTime = new Date();
 
-    private String creator;
+    private String creator = "unknown";
 
     @Temporal(TemporalType.DATE)
     @Column(name = "modify_date_time")

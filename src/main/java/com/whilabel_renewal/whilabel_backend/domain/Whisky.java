@@ -1,10 +1,12 @@
 package com.whilabel_renewal.whilabel_backend.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+
 
 @Getter
 @Setter
@@ -19,8 +21,9 @@ public class Whisky {
     private WbWhisky wbWhisky;
 
     private String barcode;
-    private String name;
-    private String normalizedName;
+
+    private String name = "unkown";
+    private String normalizedName = "unknown";
     private Double strength;
 
     @Column(name = "image_url")
@@ -45,9 +48,9 @@ public class Whisky {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date_time")
-    private Date createDateTime;
+    private Date createDateTime = new Date();
 
-    private String creator;
+    private String creator = "unknown";
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date_time")

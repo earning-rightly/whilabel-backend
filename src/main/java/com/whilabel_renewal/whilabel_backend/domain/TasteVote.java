@@ -24,5 +24,5 @@ public class TasteVote {
     private TasteTag tasteTag;
 
     @Column(name = "vote_count")
-    private int voteCount;
+    private int voteCount = 0;
 }
