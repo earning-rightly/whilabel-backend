@@ -27,17 +27,17 @@ public class WhiskyPost {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date_time")
-    private Date createDateTime;
+    private Date createDateTime = new Date();
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date_time")
     private Date modifyDateTime;
 
-    private Double rating;
+    private Double rating = 0.0;
 
     @OneToOne
     @JoinColumn(name = "taste_feature_id")
-    private TasteFeature tasteFeature;
+    private TasteFeature tasteFeature = new TasteFeature();
 
     @Column(name = "taste_note")
     private String tastNote;
