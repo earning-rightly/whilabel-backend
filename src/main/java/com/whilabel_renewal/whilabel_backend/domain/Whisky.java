@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.mapping.ToOne;
 
 import java.util.Date;
 
@@ -16,7 +17,7 @@ public class Whisky {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "wb_whisky_id")
     private WbWhisky wbWhisky;
 
@@ -31,12 +32,11 @@ public class Whisky {
 
     private Double price;
 
-    //priceUnitId
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "price_unit_id")
     private PriceUnit priceUnit;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "distillery_id")
     private Distillery distillery;
 

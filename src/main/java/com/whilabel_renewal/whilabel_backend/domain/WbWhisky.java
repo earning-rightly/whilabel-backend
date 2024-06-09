@@ -1,11 +1,14 @@
 package com.whilabel_renewal.whilabel_backend.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,4 +45,9 @@ public class WbWhisky {
 
     @Column(name = "whisky_category")
     private String whiskyCategory;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "wbWhisky",fetch = FetchType.EAGER)
+    private List<TasteVote> tasteVoteList = new ArrayList<>();
 }
