@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -37,15 +39,15 @@ public class Distillery {
 
     private String owner;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date_time")
-    private Date createDateTime = new Date();
+    private LocalDateTime createDateTime = LocalDateTime.now();
 
     private String creator = "unknown";
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date_time")
-    private Date modifyDateTime;
+    private LocalDateTime modifyDateTime;
 
     private String modifier;
 

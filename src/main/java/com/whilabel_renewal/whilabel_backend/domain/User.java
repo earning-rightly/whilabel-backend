@@ -9,18 +9,6 @@ import lombok.Setter;
 
 import java.util.Date;
 
-//id INT PRIMARY KEY,
-//sns_login_type VARCHAR(255) NOT NULL,
-//nickname VARCHAR(255) NOT NULL,
-//is_push_allowed BOOLEAN NOT NULL,
-//is_marketing_push_allowed BOOLEAN NOT NULL,
-//push_token VARCHAR(255) NOT NULL,
-//sns_token VARCHAR(255) NOT NULL,
-//auth_token VARCHAR(255) NOT NULL,
-//is_resigned BOOLEAN NOT NULL,
-//gender VARCHAR(50),
-//birth_day VARCHAR(50)
-
 @Getter
 @Setter
 @Entity(name = "users")
