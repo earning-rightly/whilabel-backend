@@ -22,6 +22,9 @@ public class User {
     @Column(name = "sns_login_type")
     private SnsLoginType snsLoginType = SnsLoginType.GOOGLE;
 
+    @Column(name = "sns_id")
+    private String snsId;
+
     private String nickname;
 
     @Column(name = "is_push_allowed")

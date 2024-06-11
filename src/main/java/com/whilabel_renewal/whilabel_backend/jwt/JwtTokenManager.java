@@ -1,5 +1,6 @@
 package com.whilabel_renewal.whilabel_backend.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,5 +41,8 @@ public class JwtTokenManager {
                 .getSubject());
     }
 
+    public String getTokenFromHeader(String header) {
+        return header.split(" ")[1];
+    }
 
 }
