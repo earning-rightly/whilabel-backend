@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -30,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        List<String> list = new ArrayList<String>(List.of("/api/user/login"));
+        List<String> list = new ArrayList<String>(List.of("/api/v1/user/login"));
 
 
         if (list.contains(request.getRequestURI())) {
@@ -39,7 +42,6 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String header = request.getHeader("Authorization");
-
         try {
             JwtTokenManager jwtTokenManager = new JwtTokenManager();
             if (header != null && !header.equalsIgnoreCase("")) {
@@ -48,24 +50,15 @@ public class JwtFilter extends OncePerRequestFilter {
                 Long userId = jwtTokenManager.extractUserId(token);
                 Optional<User> result = userRepository.findById(userId);
 
-
                 if (result.isPresent()) {
                     filterChain.doFilter(request,response);
                 }
                 else {
-                    response.setCharacterEncoding("UTF-8");
-                    response.setContentType("application/json");
-                    PrintWriter printWriter = response.getWriter();
-
-                    HashMap<String, Object> jsonMap = new HashMap<>();
-                    jsonMap.put("status", 401);
-                    jsonMap.put("message", "userId is null");
-                    JSONObject jsonObject = new JSONObject(jsonMap);
-
-                    printWriter.print(jsonObject);
-                    printWriter.flush();
-                    printWriter.close();
+                    response.sendError(HttpStatus.UNAUTHORIZED.value());
                 }
+            }
+            else {
+                response.sendError(HttpStatus.UNAUTHORIZED.value());
             }
         }
         catch (Exception e) {

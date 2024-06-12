@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Component
+
 public class JwtTokenManager {
 
     @Value("${jwt.secret}")
