@@ -2,6 +2,7 @@ package com.whilabel_renewal.whilabel_backend.controller;
 
 import com.whilabel_renewal.whilabel_backend.domain.User;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
+import com.whilabel_renewal.whilabel_backend.service.GoogleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.KakaoValidateService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,9 @@ public class UserController {
     private KakaoValidateService kakaoValidateService;
 
     @Autowired
+    private GoogleValidateService googleValidateService;
+
+    @Autowired
     private UserRepository userRepository;
 
     @PostMapping("login")
@@ -40,17 +44,20 @@ public class UserController {
             result.put("message","sns_token not found");
             return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
         }
-        Long sns_id;
+        String sns_id;
         switch (sns_type) {
             case "kakao":
-                sns_id = kakaoValidateService.getUserId(sns_token);
+                sns_id = String.valueOf(kakaoValidateService.getUserId(sns_token));
+                break;
+            case "google":
+                sns_id = googleValidateService.getSub(sns_token);
                 break;
             default:
                 result.put("message","sns_token not found");
                 return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
         }
 
-        User user = userRepository.findBySnsId(String.valueOf(sns_id));
+        User user = userRepository.findBySnsId(sns_id);
 
         if (user == null) {
             result.put("message","need register");
