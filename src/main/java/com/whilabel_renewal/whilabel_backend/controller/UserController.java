@@ -1,6 +1,7 @@
 package com.whilabel_renewal.whilabel_backend.controller;
 
 import com.whilabel_renewal.whilabel_backend.domain.User;
+import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
 import com.whilabel_renewal.whilabel_backend.service.applevalidate.AppleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.GoogleValidateService;
@@ -71,7 +72,10 @@ public class UserController {
             return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
         }
 
-        result.put("token","someToken");
+        JwtTokenManager tokenManager = new JwtTokenManager();
+        String token = tokenManager.generateToken(user.getId());
+
+        result.put("token",token);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
