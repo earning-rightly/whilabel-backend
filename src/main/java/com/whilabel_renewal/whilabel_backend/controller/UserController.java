@@ -67,7 +67,7 @@ public class UserController {
         User user = userRepository.findBySnsId(sns_id);
 
         if (user == null) {
-            result.put("message","need register" + sns_id);
+            result.put("message","need register");
             return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
         }
 
