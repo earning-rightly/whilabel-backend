@@ -2,6 +2,7 @@ package com.whilabel_renewal.whilabel_backend.controller;
 
 import com.whilabel_renewal.whilabel_backend.domain.User;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
+import com.whilabel_renewal.whilabel_backend.service.applevalidate.AppleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.GoogleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.KakaoValidateService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,9 @@ public class UserController {
     private GoogleValidateService googleValidateService;
 
     @Autowired
+    private AppleValidateService appleValidateService;
+
+    @Autowired
     private UserRepository userRepository;
 
     @PostMapping("login")
@@ -52,6 +56,9 @@ public class UserController {
             case "google":
                 sns_id = googleValidateService.getSub(sns_token);
                 break;
+            case "apple":
+                sns_id = appleValidateService.getSub(sns_token);
+                break;
             default:
                 result.put("message","sns_token not found");
                 return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
@@ -60,7 +67,7 @@ public class UserController {
         User user = userRepository.findBySnsId(sns_id);
 
         if (user == null) {
-            result.put("message","need register");
+            result.put("message","need register" + sns_id);
             return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
         }
 

@@ -40,7 +40,6 @@ public class GoogleValidateService {
         private String email;
         private String email_verified;
         private String access_type;
-
     }
 
 }
