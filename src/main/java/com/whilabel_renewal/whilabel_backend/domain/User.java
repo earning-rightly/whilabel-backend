@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -34,13 +35,10 @@ public class User {
     private boolean isMarketingPushAllowed = false;
 
     @Column(name = "push_token")
-    private String pushToken;
+    private String pushToken = "";
 
     @Column(name = "sns_token")
     private String snsToken = "";
-
-    @Column(name = "auth_token")
-    private String authToken = "";
 
     @Column(name = "is_resigned")
     private boolean isResigned = false;
@@ -48,7 +46,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date birth_day;
+    @Column(columnDefinition = "DATE")
+    private LocalDate birth_day;
 }
 

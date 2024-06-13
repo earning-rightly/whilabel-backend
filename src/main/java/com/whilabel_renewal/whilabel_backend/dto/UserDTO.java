@@ -1,24 +1,33 @@
 package com.whilabel_renewal.whilabel_backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.whilabel_renewal.whilabel_backend.domain.User;
-import com.whilabel_renewal.whilabel_backend.enums.Gender;
-import com.whilabel_renewal.whilabel_backend.enums.SnsLoginType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.TemporalType;
+import lombok.Builder;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Optional;
 
 public class UserDTO {
+    @JsonFormat
     private Long id;
+    @JsonFormat
     private String snsLoginType;
+    @JsonFormat
     private String nickname;
+    @JsonFormat
     private boolean isPushAllowed;
+    @JsonFormat
     private boolean isMarketingAllowed;
+    @JsonFormat
     private String pushToken;
+    @JsonFormat
     private boolean isResigned;
+    @JsonFormat
     private String gender;
-    private Date birthDay;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate birthDay;
+    @JsonFormat
+    private String message;
 
 
     public UserDTO(User user) {
@@ -39,6 +48,11 @@ public class UserDTO {
             case FEMALE -> gender = "female";
         }
         birthDay = user.getBirth_day();
+
+    }
+
+    public UserDTO(String message) {
+        this.message = message;
     }
 
 }
