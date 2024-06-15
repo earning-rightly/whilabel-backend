@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        List<String> list = new ArrayList<String>(List.of("/api/v1/user/login","/api/v1/user/register"));
+        List<String> list = new ArrayList<String>(List.of("/api/v1/user/login","/api/v1/user/register","/api/v1/user/nickname/check"));
 
 
         if (list.contains(request.getRequestURI())) {
