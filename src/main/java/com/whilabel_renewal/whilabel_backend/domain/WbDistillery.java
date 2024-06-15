@@ -20,6 +20,8 @@ public class WbDistillery {
     private String country;
     private String address;
 
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "batch_date_time")

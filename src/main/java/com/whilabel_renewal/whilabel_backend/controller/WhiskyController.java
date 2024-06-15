@@ -2,6 +2,7 @@ package com.whilabel_renewal.whilabel_backend.controller;
 
 import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
+import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostDetailDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostListDTO;
 import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
@@ -69,6 +71,18 @@ public class WhiskyController {
 
         BaseDTO<List<WhiskyPostListDTO>> response = BaseDTO.<List<WhiskyPostListDTO>>builder().data(result).build();
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @GetMapping("detail")
+    public ResponseEntity<BaseDTO<WhiskyPostDetailDTO>> detail(@RequestParam(name = "id") int id) {
+        Optional<WhiskyPost> wp = whiskyPostRepository.findById((long) id);
+
+        if (wp.isEmpty()) {
+            return new ResponseEntity<>(BaseDTO.<WhiskyPostDetailDTO>builder().message("no data").build(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(BaseDTO.<WhiskyPostDetailDTO>builder().data(new WhiskyPostDetailDTO(wp.get())).build(), HttpStatus.OK);
     }
 
 

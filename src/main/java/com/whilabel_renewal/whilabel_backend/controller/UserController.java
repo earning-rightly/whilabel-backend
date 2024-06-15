@@ -152,7 +152,7 @@ public class UserController {
 
 
     @PostMapping("/nickname/check")
-    private ResponseEntity<BaseDTO<Object>> checkNickname(@RequestBody Map<String,String> body){
+    public ResponseEntity<BaseDTO<Object>> checkNickname(@RequestBody Map<String,String> body){
         System.out.println("body ->" + body.get("nickname"));
 
         User user = userRepository.findByNickname(body.get("nickname"));
