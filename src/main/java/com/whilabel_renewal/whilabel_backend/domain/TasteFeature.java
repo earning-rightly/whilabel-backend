@@ -11,7 +11,8 @@ import lombok.Setter;
 public class TasteFeature {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "taste_feature_seq")
+    @SequenceGenerator(name = "taste_feature_seq", sequenceName = "taste_feature_seq")
     private Long id;
 
     @Column(name = "body_rate")

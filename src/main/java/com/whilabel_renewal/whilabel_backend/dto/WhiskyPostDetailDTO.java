@@ -39,9 +39,18 @@ public class WhiskyPostDetailDTO {
             distilleryImage = wp.getWhisky().getDistillery().getWbDistillery().getImageUrl();
         }
 
-        whiskyImage = wp.getImageUrl();
+        if (wp.getImageUrl() != null) {
+            whiskyImage = wp.getImageUrl();
+        }
+        else if (wp.getWhisky().getImageUrl() != null) {
+            whiskyImage = wp.getWhisky().getImageUrl();
+        }
+        else {
+            whiskyImage = wp.getWhisky().getWbWhisky().getImageUrl();
+        }
+
         whiskyName = wp.getWhisky().getName();
-        
+
         if (wp.getWhisky().getDistillery().getAddress() != null) {
             distilleryAddress = wp.getWhisky().getDistillery().getAddress();
         }

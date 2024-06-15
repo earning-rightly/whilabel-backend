@@ -16,7 +16,8 @@ import java.util.Date;
 @Entity
 public class WhiskyPost {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "whisky_post_seq")
+    @SequenceGenerator(name = "whisky_post_seq", sequenceName = "whisky_post_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne

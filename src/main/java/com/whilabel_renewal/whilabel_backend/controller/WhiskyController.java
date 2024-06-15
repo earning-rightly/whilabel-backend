@@ -1,12 +1,18 @@
 package com.whilabel_renewal.whilabel_backend.controller;
 
+import com.whilabel_renewal.whilabel_backend.domain.TasteFeature;
+import com.whilabel_renewal.whilabel_backend.domain.User;
+import com.whilabel_renewal.whilabel_backend.domain.Whisky;
 import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostDetailDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostListDTO;
 import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
+import com.whilabel_renewal.whilabel_backend.repository.TasteFeatureRepository;
+import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyRepository;
+import com.whilabel_renewal.whilabel_backend.requestDto.WhiskyPostDetailRequestDTO;
 import com.whilabel_renewal.whilabel_backend.util.UserIdExtractUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +36,16 @@ public class WhiskyController {
 
     @Autowired
     private WhiskyPostRepository whiskyPostRepository;
+
+    @Autowired
+    private WhiskyRepository whiskyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TasteFeatureRepository tasteFeatureRepository;
+
 
     @GetMapping("list")
     public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> list(HttpServletRequest request, @RequestParam Map<String, String> query) {
@@ -85,6 +101,35 @@ public class WhiskyController {
         return new ResponseEntity<>(BaseDTO.<WhiskyPostDetailDTO>builder().data(new WhiskyPostDetailDTO(wp.get())).build(), HttpStatus.OK);
     }
 
+
+    @PostMapping("detail")
+    public ResponseEntity<BaseDTO<Object>> saveDetail(HttpServletRequest request, @RequestBody WhiskyPostDetailRequestDTO requestDTO){
+        Long userId = UserIdExtractUtil.extractUserIdFromHeader(request);
+        User user = userRepository.findById(userId).get();
+
+        WhiskyPost wp = new WhiskyPost();
+        wp.setUser(user);
+        wp.setImageUrl(requestDTO.getImageUrl());
+        wp.setRating(requestDTO.getRating());
+        wp.setTastNote(requestDTO.getTasteNote());
+
+        TasteFeature tf = new TasteFeature();
+        tf.setBodyRate(requestDTO.getBodyRate().intValue());
+        tf.setFlavorRate(requestDTO.getFlavorRate().intValue());
+        tf.setPeatRate(requestDTO.getPeatRate().intValue());
+        wp.setTasteFeature(tf);
+        tasteFeatureRepository.save(tf);
+
+
+        if (requestDTO.getWhiskyId() != null) {
+            Whisky whisky = whiskyRepository.findById(requestDTO.getWhiskyId()).get();
+            wp.setWhisky(whisky);
+        }
+
+        whiskyPostRepository.save(wp);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 
