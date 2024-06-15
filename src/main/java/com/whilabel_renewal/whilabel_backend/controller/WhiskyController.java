@@ -12,6 +12,7 @@ import com.whilabel_renewal.whilabel_backend.repository.TasteFeatureRepository;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyRepository;
+import com.whilabel_renewal.whilabel_backend.requestDto.WhiskyPostDetailEditDTO;
 import com.whilabel_renewal.whilabel_backend.requestDto.WhiskyPostDetailRequestDTO;
 import com.whilabel_renewal.whilabel_backend.util.UserIdExtractUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -126,6 +127,21 @@ public class WhiskyController {
             wp.setWhisky(whisky);
         }
 
+        whiskyPostRepository.save(wp);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("detail")
+    public ResponseEntity<BaseDTO<Object>> editDetail(HttpServletRequest request, @RequestBody WhiskyPostDetailEditDTO requestDTO) {
+        WhiskyPost wp = whiskyPostRepository.findById(requestDTO.getId()).get();
+
+        wp.setRating(requestDTO.getRating());
+        wp.setTastNote(requestDTO.getTasteNote());
+        TasteFeature tf = wp.getTasteFeature();
+        tf.setBodyRate(requestDTO.getBodyRate().intValue());
+        tf.setPeatRate(requestDTO.getPeatRate().intValue());
+        tf.setFlavorRate(requestDTO.getFlavorRate().intValue());
         whiskyPostRepository.save(wp);
 
         return new ResponseEntity<>(HttpStatus.OK);
