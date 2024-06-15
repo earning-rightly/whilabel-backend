@@ -30,6 +30,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtTokenManager jwtTokenManager;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -43,7 +46,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
         try {
-            JwtTokenManager jwtTokenManager = new JwtTokenManager();
             if (header != null && !header.equalsIgnoreCase("")) {
                 String token = jwtTokenManager.getTokenFromHeader(header);
 

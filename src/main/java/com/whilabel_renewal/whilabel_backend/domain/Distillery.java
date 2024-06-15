@@ -21,6 +21,8 @@ public class Distillery {
     private WbDistillery wbDistillery;
 
     private String name = "unknown";
+
+    @Column(name = "normalized_name")
     private String normalizedName = "unknown";
 
     @Column(name = "official_url")

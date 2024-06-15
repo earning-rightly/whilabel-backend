@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -31,26 +29,48 @@ public class WhiskyController {
     @Autowired
     private WhiskyPostRepository whiskyPostRepository;
 
-    @Autowired
-    private JwtTokenManager tokenManager;
-
     @GetMapping("list")
-    public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> list(HttpServletRequest request, Map<String, String> query) {
+    public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> list(HttpServletRequest request, @RequestParam Map<String, String> query) {
     //recent, oldest, rating-ascend, rating-descent
         String sort = query.get("sort");
         String page = query.get("page");
+        if (page == null || page.isBlank() || page.isEmpty()) {
+            page = "0";
+        }
         Long userId = UserIdExtractUtil.extractUserIdFromHeader(request);
-        List<WhiskyPost> lists = whiskyPostRepository.getByRecent(userId, 0);
+        List<WhiskyPost> lists;
 
+        switch (sort) {
+            case "recent" -> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
+            case "oldest" -> lists = whiskyPostRepository.getByOldest(userId, Integer.parseInt(page));
+            case "rating-ascend" -> lists = whiskyPostRepository.getByRatingAscend(userId, Integer.parseInt(page)); //평점 낮은순
+            case "rating-descend" -> lists = whiskyPostRepository.getByRatingAscend(userId, Integer.parseInt(page)); // 평점 높은순
+            default -> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
+        }
+
+        List<WhiskyPostListDTO>  result = lists.stream().map(WhiskyPostListDTO::new).toList();
+
+
+        BaseDTO<List<WhiskyPostListDTO>> response = BaseDTO.<List<WhiskyPostListDTO>>builder().data(result).build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("grid")
+    public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> grid(HttpServletRequest request, Map<String, String> query) {
+        String page = query.get("page");
+        if (page == null || page.isBlank() || page.isEmpty()) {
+            page = "0";
+        }
+        Long userId = UserIdExtractUtil.extractUserIdFromHeader(request);
+        List<WhiskyPost> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
 
         List<WhiskyPostListDTO> result = lists.stream().map(WhiskyPostListDTO::new).toList();
 
 
         BaseDTO<List<WhiskyPostListDTO>> response = BaseDTO.<List<WhiskyPostListDTO>>builder().data(result).build();
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
-
-    };
 
 
 

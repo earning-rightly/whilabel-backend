@@ -99,7 +99,7 @@ public class UserController {
             result.put("message", "sns_token not valid");
             return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
         }
-        user.setSnsId(requestDTO.getSnsToken());
+        user.setSnsId(sns_id);
 
         switch (requestDTO.getSnsType()) {
             case "kakao" -> user.setSnsLoginType(SnsLoginType.KAKAO);

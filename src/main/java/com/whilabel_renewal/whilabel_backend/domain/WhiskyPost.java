@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.mapping.ToOne;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class WhiskyPost {
     private User user;
 
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "whisky_id")
     private Whisky whisky;
 
