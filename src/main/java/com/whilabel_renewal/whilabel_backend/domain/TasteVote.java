@@ -14,7 +14,7 @@ public class TasteVote {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "wb_whisky_id")
     private WbWhisky wbWhisky;
 
@@ -24,5 +24,5 @@ public class TasteVote {
     private TasteTag tasteTag;
 
     @Column(name = "vote_count")
-    private int voteCount;
+    private int voteCount = 0;
 }

@@ -15,11 +15,11 @@ public class TasteFeature {
     private Long id;
 
     @Column(name = "body_rate")
-    private int bodyRate;
+    private int bodyRate = 0;
 
     @Column(name = "flavor_rate")
-    private int flavorRate;
+    private int flavorRate = 0;
 
     @Column(name = "peat_rate")
-    private int peatRate;
+    private int peatRate = 0;
 }

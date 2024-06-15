@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -18,8 +20,8 @@ public class Distillery {
     @JoinColumn(name = "wb_distillery_id")
     private WbDistillery wbDistillery;
 
-    private String name;
-    private String normalizedName;
+    private String name = "unknown";
+    private String normalizedName = "unknown";
 
     @Column(name = "official_url")
     private String officialUrl;
@@ -37,15 +39,15 @@ public class Distillery {
 
     private String owner;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date_time")
-    private Date createDateTime;
+    private LocalDateTime createDateTime = LocalDateTime.now();
 
-    private String creator;
+    private String creator = "unknown";
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date_time")
-    private Date modifyDateTime;
+    private LocalDateTime modifyDateTime;
 
     private String modifier;
 
