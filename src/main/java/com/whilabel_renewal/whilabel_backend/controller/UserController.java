@@ -1,6 +1,7 @@
 package com.whilabel_renewal.whilabel_backend.controller;
 
 import com.whilabel_renewal.whilabel_backend.domain.User;
+import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.UserDTO;
 import com.whilabel_renewal.whilabel_backend.enums.Gender;
 import com.whilabel_renewal.whilabel_backend.enums.SnsLoginType;
@@ -13,14 +14,12 @@ import com.whilabel_renewal.whilabel_backend.service.KakaoValidateService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -149,5 +148,24 @@ public class UserController {
                 return "";
         }
         return sns_id;
+    }
+
+
+    @PostMapping("/nickname/check")
+    private ResponseEntity<BaseDTO<Object>> checkNickname(@RequestBody Map<String,String> body){
+        System.out.println("body ->" + body.get("nickname"));
+
+        User user = userRepository.findByNickname(body.get("nickname"));
+
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else {
+            Map<String, String> result = new HashMap<>();
+            result.put("message","nickname not allowed");
+            BaseDTO<Object> dto = BaseDTO.builder().message("nickname not allowed").data(null).build();
+            return new ResponseEntity<>(dto,HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
