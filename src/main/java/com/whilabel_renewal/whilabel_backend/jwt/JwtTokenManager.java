@@ -6,12 +6,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.*;
 
-
+@Component
 public class JwtTokenManager {
 
     @Value("${jwt.secret}")
@@ -19,7 +20,6 @@ public class JwtTokenManager {
     private final Key secretKey;
 
     public JwtTokenManager() {
-        System.out.println("jwt secret" + secret);
         byte[] keyBytes = Base64.getDecoder().decode("yPfZyQngsFpMklbL4rQfTwGhk2KmFfxdfsasdfasdfasdasdfagasdfasdfasdfasdfasdf");
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }

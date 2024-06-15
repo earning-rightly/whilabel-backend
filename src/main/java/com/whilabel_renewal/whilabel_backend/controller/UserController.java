@@ -45,6 +45,9 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtTokenManager tokenManager;
+
     @PostMapping("login")
     public ResponseEntity<Map<String, String>> login(HttpServletRequest request) {
         String sns_token = request.getParameter("snsToken");
@@ -109,7 +112,6 @@ public class UserController {
 
         System.out.println( "user.id" + user.getId());
 
-        JwtTokenManager tokenManager = new JwtTokenManager();
         String token = tokenManager.generateToken(user.getId());
 
         result.put("token", token);
