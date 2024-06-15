@@ -4,7 +4,10 @@ package com.whilabel_renewal.whilabel_backend.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -25,13 +28,15 @@ public class WhiskyPost {
     private Whisky whisky;
 
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date_time")
-    private Date createDateTime = new Date();
+    private LocalDateTime createDateTime;
 
+    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date_time")
-    private Date modifyDateTime;
+    private LocalDateTime modifyDateTime;
 
     private Double rating = 0.0;
 
