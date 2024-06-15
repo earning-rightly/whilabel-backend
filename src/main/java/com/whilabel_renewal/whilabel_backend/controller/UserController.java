@@ -11,6 +11,7 @@ import com.whilabel_renewal.whilabel_backend.requestDto.UserRegisterRequestDTO;
 import com.whilabel_renewal.whilabel_backend.service.applevalidate.AppleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.GoogleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.KakaoValidateService;
+import com.whilabel_renewal.whilabel_backend.util.UserIdExtractUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -151,7 +152,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/nickname/check")
+    @PostMapping("nickname/check")
     public ResponseEntity<BaseDTO<Object>> checkNickname(@RequestBody Map<String,String> body){
         System.out.println("body ->" + body.get("nickname"));
 
@@ -166,6 +167,44 @@ public class UserController {
             BaseDTO<Object> dto = BaseDTO.builder().message("nickname not allowed").data(null).build();
             return new ResponseEntity<>(dto,HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @PutMapping("push_token")
+    public ResponseEntity<BaseDTO<Object>> setPushToken(HttpServletRequest request, @RequestBody Map<String,String> body) {
+        String pushToken = body.get("pushToken");
+        Long userId = UserIdExtractUtil.extractUserIdFromHeader(request);
+        User user = userRepository.findById(userId).get();
+        user.setPushToken(pushToken);
+        userRepository.save(user);
+        System.out.println(body.get("pushToken"));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @PutMapping("push")
+    public  ResponseEntity<BaseDTO<Object>> setPushAllow(HttpServletRequest request, @RequestBody Map<String,Boolean> body){
+        Long userId = UserIdExtractUtil.extractUserIdFromHeader(request);
+        User user = userRepository.findById(userId).get();
+        Boolean isMarketingPushAllowed = body.get("isMarketingPushAllowed");
+        Boolean isPushAllowed = body.get("isPushAllowed");
+        if (isMarketingPushAllowed != null) {
+            user.setMarketingPushAllowed(isMarketingPushAllowed);
+        }
+        if (isPushAllowed != null) {
+            user.setPushAllowed(isPushAllowed);
+        }
+
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @PutMapping("resign")
+    public ResponseEntity<BaseDTO<Object>> resign(HttpServletRequest request) {
+        Long userId = UserIdExtractUtil.extractUserIdFromHeader(request);
+        User user = userRepository.findById(userId).get();
+        user.setResigned(true);
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
