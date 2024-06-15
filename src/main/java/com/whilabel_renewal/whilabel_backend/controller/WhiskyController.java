@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -113,6 +114,7 @@ public class WhiskyController {
         wp.setImageUrl(requestDTO.getImageUrl());
         wp.setRating(requestDTO.getRating());
         wp.setTastNote(requestDTO.getTasteNote());
+        wp.setModifyDateTime(LocalDateTime.now());
 
         TasteFeature tf = new TasteFeature();
         tf.setBodyRate(requestDTO.getBodyRate().intValue());
