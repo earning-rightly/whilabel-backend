@@ -3,7 +3,9 @@ package com.whilabel_renewal.whilabel_backend.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,8 +24,9 @@ public class Announcement {
     @Column(name = "image_urls")
     private String imageUrls;
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date_time")
-    private Date createdDateTime;
+    @Column(name = "create_date_time")
+    private LocalDateTime createdDateTime;
 
 }
