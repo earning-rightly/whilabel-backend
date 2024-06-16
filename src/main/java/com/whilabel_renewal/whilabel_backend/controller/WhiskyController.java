@@ -1,17 +1,11 @@
 package com.whilabel_renewal.whilabel_backend.controller;
 
-import com.whilabel_renewal.whilabel_backend.domain.TasteFeature;
-import com.whilabel_renewal.whilabel_backend.domain.User;
-import com.whilabel_renewal.whilabel_backend.domain.Whisky;
-import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
+import com.whilabel_renewal.whilabel_backend.domain.*;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostDetailDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostListDTO;
 import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
-import com.whilabel_renewal.whilabel_backend.repository.TasteFeatureRepository;
-import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
-import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
-import com.whilabel_renewal.whilabel_backend.repository.WhiskyRepository;
+import com.whilabel_renewal.whilabel_backend.repository.*;
 import com.whilabel_renewal.whilabel_backend.requestDto.WhiskyPostDetailEditDTO;
 import com.whilabel_renewal.whilabel_backend.requestDto.WhiskyPostDetailRequestDTO;
 import com.whilabel_renewal.whilabel_backend.util.UserIdExtractUtil;
@@ -24,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -149,6 +144,20 @@ public class WhiskyController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+
+    @GetMapping("scan")
+    public ResponseEntity<BaseDTO<Map<String,String>>> scan(@RequestParam("barcode") String barcode) {
+        String whiskyId = whiskyRepository.findByBarcode(barcode);
+        Map<String, String> result = new HashMap<>();
+        if (whiskyId == null) {
+            return new ResponseEntity<>(BaseDTO.<Map<String,String>>builder().message("whisky not not found").build(), HttpStatus.OK);
+        }
+        else {
+            result.put("whiskyId", whiskyId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
 
 
 }
