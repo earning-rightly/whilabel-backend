@@ -7,7 +7,6 @@ import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostDetailDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostListDTO;
-import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
 import com.whilabel_renewal.whilabel_backend.repository.TasteFeatureRepository;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
@@ -62,7 +61,7 @@ public class WhiskyController {
             case "recent" -> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
             case "oldest" -> lists = whiskyPostRepository.getByOldest(userId, Integer.parseInt(page));
             case "rating-ascend" -> lists = whiskyPostRepository.getByRatingAscend(userId, Integer.parseInt(page)); //평점 낮은순
-            case "rating-descend" -> lists = whiskyPostRepository.getByRatingAscend(userId, Integer.parseInt(page)); // 평점 높은순
+            case "rating-descend" -> lists = whiskyPostRepository.getByRatingDescend(userId, Integer.parseInt(page)); // 평점 높은순
             default -> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
         }
 

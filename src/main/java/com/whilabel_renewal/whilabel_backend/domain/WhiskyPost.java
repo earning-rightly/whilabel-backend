@@ -1,6 +1,7 @@
 package com.whilabel_renewal.whilabel_backend.domain;
 
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +39,7 @@ public class WhiskyPost {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date_time")
+    @Nullable
     private LocalDateTime modifyDateTime;
 
     private Double rating = 0.0;
