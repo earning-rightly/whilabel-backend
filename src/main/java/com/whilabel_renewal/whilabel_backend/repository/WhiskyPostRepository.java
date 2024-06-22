@@ -17,9 +17,9 @@ public interface WhiskyPostRepository extends JpaRepository<WhiskyPost,Long> {
     @Query(value = "SELECT * FROM WHISKY_POST WHERE user_id = ?1 ORDER BY create_date_time ASC LIMIT 10 OFFSET ?2 * 10",nativeQuery = true)
     List<WhiskyPost> getByOldest(Long userId,  int page);
 
-    @Query(value = "SELECT * FROM WHISKY_POST WHERE user_id = ?1 ORDER BY rating ASC LIMIT 10 OFFSET ?2 * 10",nativeQuery = true)
+    @Query(value = "SELECT * FROM WHISKY_POST WHERE user_id = ?1 ORDER BY rating DESC LIMIT 10 OFFSET ?2 * 10",nativeQuery = true)
     List<WhiskyPost> getByRatingAscend(Long userId,  int page);
 
-    @Query(value = "SELECT * FROM WHISKY_POST WHERE user_id = ?1 ORDER BY rating DESC LIMIT 10 OFFSET ?2 * 10",nativeQuery = true)
+    @Query(value = "SELECT * FROM WHISKY_POST WHERE user_id = ?1 ORDER BY rating ASC LIMIT 10 OFFSET ?2 * 10",nativeQuery = true)
     List<WhiskyPost> getByRatingDescend(Long userId, int page);
 }
