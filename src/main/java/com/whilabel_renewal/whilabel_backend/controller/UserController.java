@@ -49,34 +49,36 @@ public class UserController {
     private JwtTokenManager tokenManager;
 
     @PostMapping("login")
-    public ResponseEntity<Map<String, String>> login(HttpServletRequest request) {
+    public ResponseEntity<BaseDTO<Object>> login(HttpServletRequest request) {
         String sns_token = request.getParameter("snsToken");
         String sns_type = request.getParameter("snsType");
+        log.debug(sns_type);
 
         Map<String, String> result = new HashMap<>();
 
         if (sns_token == null) {
-            result.put("message", "sns_token not found");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            BaseDTO<Object> dto = BaseDTO.builder().message("sns_token not found").data(null).build();
+            return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
         }
 
         String sns_id = this.getSnsIdbySnsToken(sns_token, sns_type);
         if (sns_id.isEmpty()) {
-            result.put("message", "sns_token not valid");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            BaseDTO<Object> dto = BaseDTO.builder().message("sns_token not valid").data(null).build();
+            return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findBySnsId(sns_id);
 
         if (user == null) {
-            result.put("message", "need register");
-            return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
+            BaseDTO<Object> dto = BaseDTO.builder().message("need register").data(null).build();
+            return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
         }
 
         JwtTokenManager tokenManager = new JwtTokenManager();
         String token = tokenManager.generateToken(user.getId());
 
         result.put("token", token);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        BaseDTO<Object> dto = BaseDTO.builder().message(null).data(result).build();
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
 
@@ -159,7 +161,8 @@ public class UserController {
         User user = userRepository.findByNickname(body.get("nickname"));
 
         if (user == null) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            BaseDTO<Object> dto = BaseDTO.builder().message(null).data(null).build();
+            return new ResponseEntity<>(dto,HttpStatus.OK);
         }
         else {
             Map<String, String> result = new HashMap<>();
