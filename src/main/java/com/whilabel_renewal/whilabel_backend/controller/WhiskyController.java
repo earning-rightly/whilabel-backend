@@ -73,7 +73,7 @@ public class WhiskyController {
     }
 
     @GetMapping("grid")
-    public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> grid(HttpServletRequest request, Map<String, String> query) {
+    public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> grid(HttpServletRequest request, @RequestParam Map<String, String> query) {
         String page = query.get("page");
         if (page == null || page.isBlank() || page.isEmpty()) {
             page = "0";
