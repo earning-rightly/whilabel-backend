@@ -22,4 +22,7 @@ public interface WhiskyPostRepository extends JpaRepository<WhiskyPost,Long> {
 
     @Query(value = "SELECT * FROM WHISKY_POST WHERE user_id = ?1 ORDER BY rating ASC LIMIT 10 OFFSET ?2 * 10",nativeQuery = true)
     List<WhiskyPost> getByRatingDescend(Long userId, int page);
+
+    @Query(value = "SELECT COUNT(*) FROM WHISKY_POST WHERE user_id = ?1",nativeQuery = true)
+    int getByUserId(Long userId);
 }

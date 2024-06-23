@@ -1,12 +1,15 @@
 package com.whilabel_renewal.whilabel_backend.controller;
 
 import com.whilabel_renewal.whilabel_backend.domain.User;
+import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.UserDTO;
 import com.whilabel_renewal.whilabel_backend.enums.Gender;
 import com.whilabel_renewal.whilabel_backend.enums.SnsLoginType;
 import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
+import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
+import com.whilabel_renewal.whilabel_backend.repository.WhiskyRepository;
 import com.whilabel_renewal.whilabel_backend.requestDto.UserRegisterRequestDTO;
 import com.whilabel_renewal.whilabel_backend.service.applevalidate.AppleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.GoogleValidateService;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,6 +45,9 @@ public class UserController {
 
     @Autowired
     private AppleValidateService appleValidateService;
+
+    @Autowired
+    private WhiskyPostRepository whiskyPostRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -128,11 +135,13 @@ public class UserController {
         String token = jwtTokenManager.getTokenFromHeader(header);
         Long userId = jwtTokenManager.extractUserId(token);
         Optional<User> user = userRepository.findById(userId);
+
         if (user.isEmpty()) {
             return new ResponseEntity<>(new UserDTO("no user found"), HttpStatus.BAD_REQUEST);
         }
+        int whiskyCount = whiskyPostRepository.getByUserId(userId);
 
-        return new ResponseEntity<>(new UserDTO(user.get()), HttpStatus.OK);
+        return new ResponseEntity<>(new UserDTO(user.get(), whiskyCount), HttpStatus.OK);
     }
 
     private String getSnsIdbySnsToken(String sns_token,String sns_type) {
