@@ -76,8 +76,12 @@ public class UserController {
         User user = userRepository.findBySnsId(sns_id);
 
         if (user == null) {
-            BaseDTO<Object> dto = BaseDTO.builder().message("need register").data(null).build();
+            BaseDTO<Object> dto = BaseDTO.builder().message("need register").data(1001).build();
             return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
+        }
+        else if (user.isResigned() == true) {
+            BaseDTO<Object> dto = BaseDTO.builder().message("resigned account").code(1002).data(null).build();
+            return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
         }
 
         JwtTokenManager tokenManager = new JwtTokenManager();

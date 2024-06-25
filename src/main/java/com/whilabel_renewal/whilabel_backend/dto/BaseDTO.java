@@ -9,6 +9,7 @@ import lombok.Data;
 public class BaseDTO<T> {
 
     private String message;
+    private int code;
 
     private T data;
 
