@@ -4,6 +4,7 @@ import com.whilabel_renewal.whilabel_backend.domain.*;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostDetailDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostListDTO;
+import com.whilabel_renewal.whilabel_backend.dto.WhiskyScanDTO;
 import com.whilabel_renewal.whilabel_backend.repository.TasteFeatureRepository;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
@@ -149,15 +150,13 @@ public class WhiskyController {
 
 
     @GetMapping("scan")
-    public ResponseEntity<BaseDTO<Map<String,String>>> scan(@RequestParam("barcode") String barcode) {
-        String whiskyId = whiskyRepository.findByBarcode(barcode);
-        Map<String, String> result = new HashMap<>();
-        if (whiskyId == null) {
-            return new ResponseEntity<>(BaseDTO.<Map<String,String>>builder().message("whisky not not found").build(), HttpStatus.OK);
+    public ResponseEntity<BaseDTO<WhiskyScanDTO>> scan(@RequestParam("barcode") String barcode) {
+        Whisky whisky = whiskyRepository.findByBarcode(barcode);
+        if (whisky == null) {
+            return new ResponseEntity<>(BaseDTO.<WhiskyScanDTO>builder().message("whisky not not found").build(), HttpStatus.OK);
         }
         else {
-            result.put("whiskyId", whiskyId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(BaseDTO.<WhiskyScanDTO>builder().data(new WhiskyScanDTO(whisky)).build(), HttpStatus.OK);
         }
     }
 

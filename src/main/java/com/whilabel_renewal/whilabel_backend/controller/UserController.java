@@ -79,7 +79,7 @@ public class UserController {
             BaseDTO<Object> dto = BaseDTO.builder().message("need register").data(1001).build();
             return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
         }
-        else if (user.isResigned() == true) {
+        else if (user.isResigned()) {
             BaseDTO<Object> dto = BaseDTO.builder().message("resigned account").code(1002).data(null).build();
             return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
         }

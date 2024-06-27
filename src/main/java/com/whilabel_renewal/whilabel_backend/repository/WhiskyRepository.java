@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WhiskyRepository extends JpaRepository<Whisky,Long> {
 
-    @Query(value = "SELECT id FROM WHISKY WHERE barcode = ?", nativeQuery = true)
-    String findByBarcode(String barcode);
+    @Query(value = "SELECT * FROM WHISKY WHERE barcode = ?", nativeQuery = true)
+    Whisky findByBarcode(String barcode);
 
 }
