@@ -49,7 +49,7 @@ public class WhiskyController {
 
     @GetMapping("list")
     public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> list(HttpServletRequest request, @RequestParam Map<String, String> query) {
-    //recent, oldest, rating-ascend, rating-descent
+        //recent, oldest, rating-ascend, rating-descent
         String sort = query.get("sort");
         String page = query.get("page");
         if (page == null || page.isBlank() || page.isEmpty()) {
@@ -61,12 +61,14 @@ public class WhiskyController {
         switch (sort) {
             case "recent" -> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
             case "oldest" -> lists = whiskyPostRepository.getByOldest(userId, Integer.parseInt(page));
-            case "rating-ascend" -> lists = whiskyPostRepository.getByRatingAscend(userId, Integer.parseInt(page)); //평점 낮은순
-            case "rating-descend" -> lists = whiskyPostRepository.getByRatingDescend(userId, Integer.parseInt(page)); // 평점 높은순
+            case "rating-ascend" ->
+                    lists = whiskyPostRepository.getByRatingAscend(userId, Integer.parseInt(page)); //평점 낮은순
+            case "rating-descend" ->
+                    lists = whiskyPostRepository.getByRatingDescend(userId, Integer.parseInt(page)); // 평점 높은순
             default -> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
         }
 
-        List<WhiskyPostListDTO>  result = lists.stream().map(WhiskyPostListDTO::new).toList();
+        List<WhiskyPostListDTO> result = lists.stream().map(WhiskyPostListDTO::new).toList();
 
 
         BaseDTO<List<WhiskyPostListDTO>> response = BaseDTO.<List<WhiskyPostListDTO>>builder().data(result).build();
@@ -103,7 +105,7 @@ public class WhiskyController {
 
 
     @PostMapping("detail")
-    public ResponseEntity<BaseDTO<Object>> saveDetail(HttpServletRequest request, @RequestBody WhiskyPostDetailRequestDTO requestDTO){
+    public ResponseEntity<BaseDTO<Object>> saveDetail(HttpServletRequest request, @RequestBody WhiskyPostDetailRequestDTO requestDTO) {
         Long userId = UserIdExtractUtil.extractUserIdFromHeader(request);
         User user = userRepository.findById(userId).get();
 
@@ -148,14 +150,12 @@ public class WhiskyController {
     }
 
 
-
     @GetMapping("scan")
     public ResponseEntity<BaseDTO<WhiskyScanDTO>> scan(@RequestParam("barcode") String barcode) {
         Whisky whisky = whiskyRepository.findByBarcode(barcode);
         if (whisky == null) {
             return new ResponseEntity<>(BaseDTO.<WhiskyScanDTO>builder().message("whisky not not found").build(), HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(BaseDTO.<WhiskyScanDTO>builder().data(new WhiskyScanDTO(whisky)).build(), HttpStatus.OK);
         }
     }

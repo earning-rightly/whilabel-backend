@@ -10,5 +10,5 @@ public interface WhiskyRepository extends JpaRepository<Whisky,Long> {
 
     @Query(value = "SELECT * FROM WHISKY WHERE barcode = ?", nativeQuery = true)
     Whisky findByBarcode(String barcode);
-
+    
 }
