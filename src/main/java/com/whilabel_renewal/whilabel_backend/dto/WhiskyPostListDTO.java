@@ -4,6 +4,7 @@ package com.whilabel_renewal.whilabel_backend.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.whilabel_renewal.whilabel_backend.domain.Whisky;
 import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
+import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,9 +24,11 @@ public class WhiskyPostListDTO {
     private LocalDateTime createDateTime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @Nullable
     private LocalDateTime modifyDateTime;
 
     private Double rating;
+    private Double distilleryRating;
 
     private String imageUrl;
 
@@ -40,6 +43,7 @@ public class WhiskyPostListDTO {
         this.createDateTime = whiskyPost.getCreateDateTime();
         this.modifyDateTime = whiskyPost.getModifyDateTime();
         this.rating = whiskyPost.getRating();
+        this.distilleryRating = whiskyPost.getWhisky().getDistillery().getWbDistillery().getRating();
         this.imageUrl = whiskyPost.getImageUrl();
     }
 }
