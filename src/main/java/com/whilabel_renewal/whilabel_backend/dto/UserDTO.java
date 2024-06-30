@@ -28,9 +28,11 @@ public class UserDTO {
     private LocalDate birthDay;
     @JsonFormat
     private String message;
+    @JsonFormat
+    private int whiskyCount;
 
 
-    public UserDTO(User user) {
+    public UserDTO(User user,int whiskyCount) {
         id = user.getId();
         switch (user.getSnsLoginType()) {
             case GOOGLE -> snsLoginType = "google";
@@ -48,6 +50,7 @@ public class UserDTO {
             case FEMALE -> gender = "female";
         }
         birthDay = user.getBirth_day();
+        this.whiskyCount = whiskyCount;
 
     }
 

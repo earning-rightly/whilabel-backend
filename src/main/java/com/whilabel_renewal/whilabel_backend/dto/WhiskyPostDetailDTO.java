@@ -16,7 +16,7 @@ public class WhiskyPostDetailDTO {
     private String whiskyImage;
     private String whiskyName;
     private String distilleryAddress;
-    private String distillerCountry;
+    private String distilleryCountry;
     private Double distilleryRating;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createDateTime;
@@ -59,10 +59,10 @@ public class WhiskyPostDetailDTO {
         }
 
         if (wp.getWhisky().getDistillery().getCountry() != null) {
-            distillerCountry = wp.getWhisky().getDistillery().getCountry();
+            distilleryCountry = wp.getWhisky().getDistillery().getCountry();
         }
         else {
-            distillerCountry = wp.getWhisky().getDistillery().getWbDistillery().getCountry();
+            distilleryCountry = wp.getWhisky().getDistillery().getWbDistillery().getCountry();
         }
 
         distilleryRating = wp.getWhisky().getDistillery().getWbDistillery().getRating();

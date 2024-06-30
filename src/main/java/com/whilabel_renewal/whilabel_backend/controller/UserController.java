@@ -1,12 +1,15 @@
 package com.whilabel_renewal.whilabel_backend.controller;
 
 import com.whilabel_renewal.whilabel_backend.domain.User;
+import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.UserDTO;
 import com.whilabel_renewal.whilabel_backend.enums.Gender;
 import com.whilabel_renewal.whilabel_backend.enums.SnsLoginType;
 import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
+import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
+import com.whilabel_renewal.whilabel_backend.repository.WhiskyRepository;
 import com.whilabel_renewal.whilabel_backend.requestDto.UserRegisterRequestDTO;
 import com.whilabel_renewal.whilabel_backend.service.applevalidate.AppleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.GoogleValidateService;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,40 +47,49 @@ public class UserController {
     private AppleValidateService appleValidateService;
 
     @Autowired
+    private WhiskyPostRepository whiskyPostRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private JwtTokenManager tokenManager;
 
     @PostMapping("login")
-    public ResponseEntity<Map<String, String>> login(HttpServletRequest request) {
+    public ResponseEntity<BaseDTO<Object>> login(HttpServletRequest request) {
         String sns_token = request.getParameter("snsToken");
         String sns_type = request.getParameter("snsType");
+        log.debug(sns_type);
 
         Map<String, String> result = new HashMap<>();
 
         if (sns_token == null) {
-            result.put("message", "sns_token not found");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            BaseDTO<Object> dto = BaseDTO.builder().message("sns_token not found").data(null).build();
+            return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
         }
 
         String sns_id = this.getSnsIdbySnsToken(sns_token, sns_type);
         if (sns_id.isEmpty()) {
-            result.put("message", "sns_token not valid");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            BaseDTO<Object> dto = BaseDTO.builder().message("sns_token not valid").data(null).build();
+            return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findBySnsId(sns_id);
 
         if (user == null) {
-            result.put("message", "need register");
-            return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
+            BaseDTO<Object> dto = BaseDTO.builder().message("need register").data(1001).build();
+            return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
+        }
+        else if (user.isResigned()) {
+            BaseDTO<Object> dto = BaseDTO.builder().message("resigned account").code(1002).data(null).build();
+            return new ResponseEntity<>(dto, HttpStatus.FORBIDDEN);
         }
 
         JwtTokenManager tokenManager = new JwtTokenManager();
         String token = tokenManager.generateToken(user.getId());
 
         result.put("token", token);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        BaseDTO<Object> dto = BaseDTO.builder().message(null).data(result).build();
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
 
@@ -126,11 +139,13 @@ public class UserController {
         String token = jwtTokenManager.getTokenFromHeader(header);
         Long userId = jwtTokenManager.extractUserId(token);
         Optional<User> user = userRepository.findById(userId);
+
         if (user.isEmpty()) {
             return new ResponseEntity<>(new UserDTO("no user found"), HttpStatus.BAD_REQUEST);
         }
+        int whiskyCount = whiskyPostRepository.getByUserId(userId);
 
-        return new ResponseEntity<>(new UserDTO(user.get()), HttpStatus.OK);
+        return new ResponseEntity<>(new UserDTO(user.get(), whiskyCount), HttpStatus.OK);
     }
 
     private String getSnsIdbySnsToken(String sns_token,String sns_type) {
@@ -159,7 +174,8 @@ public class UserController {
         User user = userRepository.findByNickname(body.get("nickname"));
 
         if (user == null) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            BaseDTO<Object> dto = BaseDTO.builder().message(null).data(null).build();
+            return new ResponseEntity<>(dto,HttpStatus.OK);
         }
         else {
             Map<String, String> result = new HashMap<>();

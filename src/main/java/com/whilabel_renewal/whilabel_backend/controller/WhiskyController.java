@@ -1,17 +1,15 @@
 package com.whilabel_renewal.whilabel_backend.controller;
 
-import com.whilabel_renewal.whilabel_backend.domain.TasteFeature;
-import com.whilabel_renewal.whilabel_backend.domain.User;
-import com.whilabel_renewal.whilabel_backend.domain.Whisky;
-import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
+import com.whilabel_renewal.whilabel_backend.domain.*;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostDetailDTO;
 import com.whilabel_renewal.whilabel_backend.dto.WhiskyPostListDTO;
-import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
+import com.whilabel_renewal.whilabel_backend.dto.WhiskyScanDTO;
 import com.whilabel_renewal.whilabel_backend.repository.TasteFeatureRepository;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyRepository;
+import com.whilabel_renewal.whilabel_backend.requestDto.WhiskyPostDetailEditDTO;
 import com.whilabel_renewal.whilabel_backend.requestDto.WhiskyPostDetailRequestDTO;
 import com.whilabel_renewal.whilabel_backend.util.UserIdExtractUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,7 +62,7 @@ public class WhiskyController {
             case "recent" -> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
             case "oldest" -> lists = whiskyPostRepository.getByOldest(userId, Integer.parseInt(page));
             case "rating-ascend" -> lists = whiskyPostRepository.getByRatingAscend(userId, Integer.parseInt(page)); //평점 낮은순
-            case "rating-descend" -> lists = whiskyPostRepository.getByRatingAscend(userId, Integer.parseInt(page)); // 평점 높은순
+            case "rating-descend" -> lists = whiskyPostRepository.getByRatingDescend(userId, Integer.parseInt(page)); // 평점 높은순
             default -> lists = whiskyPostRepository.getByRecent(userId, Integer.parseInt(page));
         }
 
@@ -74,7 +74,7 @@ public class WhiskyController {
     }
 
     @GetMapping("grid")
-    public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> grid(HttpServletRequest request, Map<String, String> query) {
+    public ResponseEntity<BaseDTO<List<WhiskyPostListDTO>>> grid(HttpServletRequest request, @RequestParam Map<String, String> query) {
         String page = query.get("page");
         if (page == null || page.isBlank() || page.isEmpty()) {
             page = "0";
@@ -112,6 +112,7 @@ public class WhiskyController {
         wp.setImageUrl(requestDTO.getImageUrl());
         wp.setRating(requestDTO.getRating());
         wp.setTastNote(requestDTO.getTasteNote());
+        wp.setModifyDateTime(LocalDateTime.now());
 
         TasteFeature tf = new TasteFeature();
         tf.setBodyRate(requestDTO.getBodyRate().intValue());
@@ -131,6 +132,33 @@ public class WhiskyController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("detail")
+    public ResponseEntity<BaseDTO<Object>> editDetail(HttpServletRequest request, @RequestBody WhiskyPostDetailEditDTO requestDTO) {
+        WhiskyPost wp = whiskyPostRepository.findById(requestDTO.getId()).get();
+
+        wp.setRating(requestDTO.getRating());
+        wp.setTastNote(requestDTO.getTasteNote());
+        TasteFeature tf = wp.getTasteFeature();
+        tf.setBodyRate(requestDTO.getBodyRate().intValue());
+        tf.setPeatRate(requestDTO.getPeatRate().intValue());
+        tf.setFlavorRate(requestDTO.getFlavorRate().intValue());
+        whiskyPostRepository.save(wp);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("scan")
+    public ResponseEntity<BaseDTO<WhiskyScanDTO>> scan(@RequestParam("barcode") String barcode) {
+        Whisky whisky = whiskyRepository.findByBarcode(barcode);
+        if (whisky == null) {
+            return new ResponseEntity<>(BaseDTO.<WhiskyScanDTO>builder().message("whisky not not found").build(), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(BaseDTO.<WhiskyScanDTO>builder().data(new WhiskyScanDTO(whisky)).build(), HttpStatus.OK);
+        }
+    }
 
 
 }
