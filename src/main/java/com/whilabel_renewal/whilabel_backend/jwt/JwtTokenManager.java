@@ -34,7 +34,6 @@ public class JwtTokenManager {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(String.valueOf(userId))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(secretKey,SignatureAlgorithm.HS256)
                 .compact();
     }

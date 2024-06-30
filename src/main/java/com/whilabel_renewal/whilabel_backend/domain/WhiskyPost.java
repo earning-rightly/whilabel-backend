@@ -1,10 +1,15 @@
 package com.whilabel_renewal.whilabel_backend.domain;
 
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.mapping.ToOne;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -12,7 +17,8 @@ import java.util.Date;
 @Entity
 public class WhiskyPost {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "whisky_post_seq")
+    @SequenceGenerator(name = "whisky_post_seq", sequenceName = "whisky_post_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne
@@ -20,18 +26,21 @@ public class WhiskyPost {
     private User user;
 
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "whisky_id")
     private Whisky whisky;
 
 
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date_time")
-    private Date createDateTime = new Date();
+    private LocalDateTime createDateTime;
 
+    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date_time")
-    private Date modifyDateTime;
+    @Nullable
+    private LocalDateTime modifyDateTime;
 
     private Double rating = 0.0;
 

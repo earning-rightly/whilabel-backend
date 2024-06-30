@@ -20,7 +20,12 @@ public class Distillery {
     @JoinColumn(name = "wb_distillery_id")
     private WbDistillery wbDistillery;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     private String name = "unknown";
+
+    @Column(name = "normalized_name")
     private String normalizedName = "unknown";
 
     @Column(name = "official_url")

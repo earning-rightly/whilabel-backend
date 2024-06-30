@@ -30,10 +30,13 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtTokenManager jwtTokenManager;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        List<String> list = new ArrayList<String>(List.of("/api/v1/user/login","/api/v1/user/register"));
+        List<String> list = new ArrayList<String>(List.of("/api/v1/user/login","/api/v1/user/register","/api/v1/user/nickname/check"));
 
 
         if (list.contains(request.getRequestURI())) {
@@ -43,7 +46,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String header = request.getHeader("Authorization");
         try {
-            JwtTokenManager jwtTokenManager = new JwtTokenManager();
             if (header != null && !header.equalsIgnoreCase("")) {
                 String token = jwtTokenManager.getTokenFromHeader(header);
 

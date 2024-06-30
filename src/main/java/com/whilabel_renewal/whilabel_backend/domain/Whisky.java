@@ -24,6 +24,8 @@ public class Whisky {
     private String barcode;
 
     private String name = "unkown";
+
+    @Column(name = "normalized_name")
     private String normalizedName = "unknown";
     private Double strength;
 

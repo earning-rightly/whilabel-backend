@@ -23,12 +23,22 @@ public class WhiskyServiceTests {
     @Autowired
     private WbDistilleryRepository wbDistilleryRepository;
 
+    @Autowired
+    private WhiskyPostRepository whiskyPostRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TasteFeatureRepository tasteFeatureRepository;
+
+
     @Test
     public void whiskyTest()  {
         Whisky whisky = new Whisky();
-        whisky.setName("dummyWhiskyName");
+        whisky.setName("dummyWhiskyName2");
 
-        WbWhisky wbWhisky = wbWhiskyRepository.findById(2L).get();
+        WbWhisky wbWhisky = wbWhiskyRepository.findById(52L).get();
 
         whisky.setWbWhisky(wbWhisky);
 
@@ -50,7 +60,7 @@ public class WhiskyServiceTests {
     public void wbWhiskySaveTest() {
 
         WbWhisky whisky = new WbWhisky();
-        whisky.setName("dummyname");
+        whisky.setName("dummyname3");
 
         wbWhiskyRepository.save(whisky);
 
@@ -63,8 +73,8 @@ public class WhiskyServiceTests {
     public void wbDistillerySaveTest() {
 
         WbDistillery distillery = new WbDistillery();
-        distillery.setCountry("dummyCountry");
-        distillery.setAddress("dummyAddress");
+        distillery.setCountry("dummyCountry3");
+        distillery.setAddress("dummyAddress3");
         distillery.setWhiskyCount(10);
         distillery.setVoteCount(10);
         distillery.setRating(10.0);
@@ -77,5 +87,30 @@ public class WhiskyServiceTests {
         Assertions.assertThat(distillery.getAddress()).isEqualTo(result.getAddress());
 
     }
+
+
+    @Test
+    public void whiskyPostSaveTest() {
+        User user = userRepository.findById(1L).get();
+        Whisky whisky = whiskyRepository.findById(1L).get();
+        TasteFeature tf = tasteFeatureRepository.findById(1L).get();
+
+
+        WhiskyPost post = new WhiskyPost();
+
+        post.setUser(user);
+        post.setWhisky(whisky);
+        post.setTasteFeature(tf);
+        post.setTastNote("kjfa;lskjdf;askjdf;klajsdf;lkajsdf a;lsdkfj;aslkdjf");
+        post.setImageUrl("https://picsum.photos/id/237/200/300");
+
+        whiskyPostRepository.save(post);
+
+
+
+
+    }
+
+
 
 }
