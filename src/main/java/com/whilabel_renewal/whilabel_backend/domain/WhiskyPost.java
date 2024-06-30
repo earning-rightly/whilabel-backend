@@ -1,6 +1,7 @@
 package com.whilabel_renewal.whilabel_backend.domain;
 
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,8 @@ import java.util.Date;
 @Entity
 public class WhiskyPost {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "whisky_post_seq")
+    @SequenceGenerator(name = "whisky_post_seq", sequenceName = "whisky_post_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne
@@ -37,6 +39,7 @@ public class WhiskyPost {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modify_date_time")
+    @Nullable
     private LocalDateTime modifyDateTime;
 
     private Double rating = 0.0;

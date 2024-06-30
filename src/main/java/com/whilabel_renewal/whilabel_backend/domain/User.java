@@ -29,10 +29,10 @@ public class User {
     private String nickname;
 
     @Column(name = "is_push_allowed")
-    private boolean isPushAllowed = false;
+    private boolean isPushAllowed = true;
 
     @Column(name = "is_marketing_push_allowed")
-    private boolean isMarketingPushAllowed = false;
+    private boolean isMarketingPushAllowed = true;
 
     @Column(name = "push_token")
     private String pushToken = "";
