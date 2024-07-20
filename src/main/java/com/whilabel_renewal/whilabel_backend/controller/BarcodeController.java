@@ -31,6 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("api/v1/barcode/")
 public class BarcodeController {
 
+  // grayscale -> 침식 -> 팽창 -> 명암대비 (시간적 여유 확인 필요)
+  // 명암대비 -> grayScale
   @PostMapping("/scan")
   public ResponseEntity<BaseDTO<BarcodeScanResultDTO>> scan(
       @RequestParam("file") MultipartFile file) {
