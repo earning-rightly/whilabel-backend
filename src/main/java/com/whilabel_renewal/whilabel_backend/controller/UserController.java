@@ -1,7 +1,6 @@
 package com.whilabel_renewal.whilabel_backend.controller;
 
 import com.whilabel_renewal.whilabel_backend.domain.User;
-import com.whilabel_renewal.whilabel_backend.domain.WhiskyPost;
 import com.whilabel_renewal.whilabel_backend.dto.BaseDTO;
 import com.whilabel_renewal.whilabel_backend.dto.UserDTO;
 import com.whilabel_renewal.whilabel_backend.enums.Gender;
@@ -9,27 +8,23 @@ import com.whilabel_renewal.whilabel_backend.enums.SnsLoginType;
 import com.whilabel_renewal.whilabel_backend.jwt.JwtTokenManager;
 import com.whilabel_renewal.whilabel_backend.repository.UserRepository;
 import com.whilabel_renewal.whilabel_backend.repository.WhiskyPostRepository;
-import com.whilabel_renewal.whilabel_backend.repository.WhiskyRepository;
 import com.whilabel_renewal.whilabel_backend.requestDto.UserRegisterRequestDTO;
-import com.whilabel_renewal.whilabel_backend.service.applevalidate.AppleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.GoogleValidateService;
 import com.whilabel_renewal.whilabel_backend.service.KakaoValidateService;
+import com.whilabel_renewal.whilabel_backend.service.applevalidate.AppleValidateService;
 import com.whilabel_renewal.whilabel_backend.util.UserIdExtractUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 
 @Slf4j
 @RequiredArgsConstructor
@@ -76,7 +71,7 @@ public class UserController {
         User user = userRepository.findBySnsId(sns_id);
 
         if (user == null) {
-            BaseDTO<Object> dto = BaseDTO.builder().message("need register").data(1001).build();
+            BaseDTO<Object> dto = BaseDTO.builder().message("need register").code(1001).build();
             return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
         }
         else if (user.isResigned()) {
